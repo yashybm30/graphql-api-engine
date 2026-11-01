@@ -80,12 +80,10 @@ export async function oauth(app: Express) {
           { upsert: true, new: true, runValidators: true },
         )
           .then((user) =>
-            res
-              .set("Cache-Control", "no-store")
-              .json({
-                accessToken: sign({ id: String(user._id), role }),
-                expiresIn: 900,
-              }),
+            res.set("Cache-Control", "no-store").json({
+              accessToken: sign({ id: String(user._id), role }),
+              expiresIn: 900,
+            }),
           )
           .catch(next);
       },
