@@ -4,7 +4,7 @@ permissions:
   contents: read
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -17,7 +17,7 @@ jobs:
       - run: docker build -t portfolio-app:ci .
 
   integration:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       JWT_SECRET: ci-only-ephemeral-key-not-used-outside-tests-123456789
       REDIS_URL: redis://localhost:6379

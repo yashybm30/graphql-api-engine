@@ -36,6 +36,27 @@ it("persists notes, batches authors, isolates ownership and denies member admin 
     );
     expect(created.body.errors).toBeUndefined();
     const id = created.body.data.createNote.id;
+    expect((await query("{me{id email role}}", ta)).body.data.me.email).toBe(
+      "a@example.test",
+    );
+    expect(
+      (await query("{adminUsers{id email}}", tb)).body.data.adminUsers.length,
+    ).toBeGreaterThanOrEqual(2);
+    expect(
+      (await query(`{note(id:"${id}"){title}}`, ta)).body.data.note.title,
+    ).toBe("Private");
+    expect(
+      (await query('{note(id:"invalid"){id}}', ta)).body.errors[0].extensions
+        .code,
+    ).toBe("BAD_USER_INPUT");
+    expect(
+      (await query('mutation{createNote(title:"",body:"x"){id}}', ta)).body
+        .errors[0].extensions.code,
+    ).toBe("BAD_USER_INPUT");
+    const ready = await request(server.app).get("/health/ready").expect(200);
+    expect(ready.body.status).toBe("ready");
+    await request(server.app).get("/health/live").expect(200);
+
     expect(created.body.data.createNote.author.name).toBe("Alice");
     expect(
       (await query(`{note(id:"${id}"){title}}`, tb)).body.data.note,

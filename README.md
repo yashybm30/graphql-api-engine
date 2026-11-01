@@ -94,3 +94,7 @@ The admin panel is a GraphQL query surface, not a browser dashboard. Google OAut
 Add a browser admin interface, cursor pagination, persisted queries, and OAuth provider integration tests.
 
 MIT licensed. See [CONTRIBUTING.md](CONTRIBUTING.md) for the review workflow.
+
+### MongoDB host-kernel compatibility
+
+CI pins the Ubuntu 22.04 runner because the current `mongo:8` image rejects affected Linux kernels 6.19 and newer before application startup. The Docker image shares the host kernel. Use a MongoDB-supported kernel or a vendor release explicitly supporting your host; changing only the container base distribution does not fix the kernel incompatibility. See the [MongoDB upstream issue](https://jira.mongodb.org/browse/SERVER-121912). Container logs are retained in failed integration jobs.

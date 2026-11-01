@@ -1,13 +1,15 @@
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
 import { it, expect } from "vitest";
 import { parse, validate, buildSchema } from "graphql";
-import {
+const {
   boundedFields,
   typeDefs,
   requireActor,
   requireAdmin,
   loaders,
-} from "../dist/schema";
-import { sign, verify } from "../dist/security";
+} = require("../dist/schema");
+const { sign, verify } = require("../dist/security");
 it("enforces auth and admin authorization", () => {
   const context = { loaders: loaders() };
   expect(() => requireActor(context)).toThrow("Authentication");
